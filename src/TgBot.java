@@ -15,7 +15,7 @@ import java.util.List;
 
 
 class TgBot extends TelegramLongPollingBot {
-    public static long chatId;
+    static long chatId;
     private static final String NAME = "testDevByBot";
     private static final String TOKEN = "306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o";
     private static final String TXT_PATH = "/home/Flerry/TestDevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/Desktop/DevByBot/TelegramUserID.txt
@@ -26,8 +26,7 @@ class TgBot extends TelegramLongPollingBot {
     private static final String ACTION_TYPING = "typing";
     private static final String ACTION_PHOTO = "upload_photo";
     private static final String CONTACTS = "[VK] - https://vk.com/devby\n[FACEBOOK] - https://www.facebook.com/devbyby\n[TWITTER] - https://twitter.com/devby\n[\uD83D\uDCE7] - dev@dev.by";
-    private static final String FEEDBACK_MSG = "Если Вам понравился наш бот, поставьте ему\" + \"\\uD83C\\uDF1F\" + \"\\uD83C\\uDF1F\" + \"\\uD83C\\uDF1F\" + \"\\uD83C\\uDF1F\" + \"\\uD83C\\uDF1F\" + \"здесь, пожалуйста:\\n\" +\n" +
-            "                        \"https://storebot.me/bot/bydevbot";
+    private static final String FEEDBACK_MSG = "Если Вам понравился наш бот, поставьте ему" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "здесь, пожалуйста:\n" + "https://storebot.me/bot/bydevbot";
 
 
     public static void main(String[] args) {
@@ -178,7 +177,7 @@ class TgBot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMsgCustomUser(long chatId, String text) { //a method for sending messages to any user
+    void sendMsgCustomUser(long chatId, String text) { //a method for sending messages to any user
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(String.valueOf(chatId));
