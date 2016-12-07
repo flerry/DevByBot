@@ -11,15 +11,16 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 class TgBot extends TelegramLongPollingBot {
     static long chatId;
-    private static final String NAME = "testDevByBot";
-    private static final String TOKEN = "306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o";
-    private static final String TXT_PATH = "/home/Flerry/TestDevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/Desktop/DevByBot/TelegramUserID.txt
-    private static final String IMG_PATH = "/home/Flerry/TestDevByBot/2016-12-05_18-38-22.png";
+    private static final String NAME = "byDevBot";
+    private static final String TOKEN = "286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U";
+    private static final String TXT_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
+    private static final String IMG_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/2016-12-05_18-38-22.png";
     private static final String HELLO_MSG = "! Я - бот ресурса Dev.by и я всегда помогаю получить актуальную информацию с нашего сайта! Воспользуйтесь кнопками...";
     private static final String UNSUBSCRIBE = ", Ваша подписка успешно удалена!\nЧтобы оформить подписку снова, нажмите на \"subscribe\"";
     private static final String SUBSCRIBE = ", Ваша подписка успешно оформлена!\nЧтобы удалить подписку, нажмите на \"subscribe\"";
@@ -27,7 +28,7 @@ class TgBot extends TelegramLongPollingBot {
     private static final String ACTION_PHOTO = "upload_photo";
     private static final String CONTACTS = "[VK] - https://vk.com/devby\n[FACEBOOK] - https://www.facebook.com/devbyby\n[TWITTER] - https://twitter.com/devby\n[\uD83D\uDCE7] - dev@dev.by";
     private static final String FEEDBACK_MSG = "Если Вам понравился наш бот, поставьте ему" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "здесь, пожалуйста:\n" + "https://storebot.me/bot/bydevbot";
-
+    private static final HashMap <Long, Integer> checkSpam = new HashMap();
 
     public static void main(String[] args) {
         System.out.println("***Start service***");
@@ -69,68 +70,89 @@ class TgBot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             chatId = message.getChatId();
-            String msgInfo = "[" + message.getDate() + "]" + " " + "[" + message.getFrom().getFirstName() + " " + message.getFrom().getLastName() + "]" + " " + "id" + " " + message.getFrom().getId() + " ";
-            if (message.getText().equals("/start")) {
-                sendMsg(message, "Здравствуйте, " + message.getFrom().getFirstName() + HELLO_MSG);
-            }
-            if (message.getText().equals("subscribe" + "\uD83D\uDCF0")) {
-                if (NewsSubscribe.subscribeIDUser.contains(message.getChatId())) {
-                    NewsSubscribe.subscribeIDUser.remove(message.getChatId());
-                    StringBuilder set = new StringBuilder();
-                    for (Long i : NewsSubscribe.subscribeIDUser) {
-                        set.append(i).append("\n");
-                    }
-                    FileWork.writeFile(set.toString());
-                    sendMsg(message, message.getFrom().getFirstName() + UNSUBSCRIBE);
-                    System.out.println(msgInfo + "Unsubscribed");
-                } else {
-                    NewsSubscribe.subscribeIDUser.add(message.getChatId());
-                    sendMsg(message, message.getFrom().getFirstName() + SUBSCRIBE);
-                    System.out.println(msgInfo + "Subscribe");
-                    FileWork.update(message.getChatId().toString() + "\r\n");
-                }
-            }
-            if (message.getText().equals("events" + "\u2B50")) {
-                sendChatAction(ACTION_TYPING);
-                ParseEvent thread = new ParseEvent();
-                thread.start();
-                System.out.println(msgInfo + "Events");
-            }
-            if (message.getText().contains("jobs")) {
-                sendMsg(message, ParseJobs.parseJobs(message.getText().replaceAll("/jobs ", "")).toString());
-                System.out.println(msgInfo + "Jobs" + " " + message.getText().replaceAll("/jobs ", ""));
-            }
+            if (checkSpam.containsKey(message.getChatId())) {
+                if (message.getDate() - checkSpam.get(message.getChatId()) < 5) {
+                    sendMsg(message, "Пожалуйста, не посылайте сообщения так часто!");
+                    message = null;
 
-            if (message.getText().equals("salaries" + "\uD83D\uDCB8")) {
-                sendChatAction(ACTION_PHOTO);
-                ParseSalaries thread = new ParseSalaries();
-                thread.start();
-                sendImageUploadingAFile(message.getChatId().toString());
-                System.out.println(msgInfo + "Salaries");
+                } else if (message.getDate() - checkSpam.get(message.getChatId()) > 5) {
+                    checkSpam.put(message.getChatId(), message.getDate());
+                }
+            } else {
+                checkSpam.put(message.getChatId(), message.getDate());
             }
-            if (message.getText().contains("feedback" + "\u2764")) {
-                sendChatAction(ACTION_TYPING);
-                sendMsg(message, FEEDBACK_MSG);
-                sendMsgCustomUser(203110206, message.getText().replaceAll("feedback", ""));
-                System.out.println(msgInfo + "Feedback");
-            }
-            if (message.getText().equals("community" + "\uD83D\uDCF1")) {
-                sendChatAction(ACTION_TYPING);
-                sendMsg(message, CONTACTS);
-                System.out.println(msgInfo + "Comunity");
-            }
-            if (message.getText().contains("more" + "\u2753")) {
-                sendChatAction(ACTION_TYPING);
-                System.out.println(msgInfo + "More");
-                sendMsg(message, "jobs <Название вакансии или язык программирования>");
-            }
-            if (message.getText().contains("alertUsers")) {
-                AdminFunction.alertUsers(message.getText().replaceAll("alertUsers ", ""));
-                System.out.println(msgInfo + "Alert");
-            }
-            if (message.getText().equals("getIdUsers")) {
-                AdminFunction.getIdUsers();
-                System.out.println(msgInfo + "GetIdUsers");
+            try {
+                String msgInfo = "[" + message.getDate() + "]" + " " + "[" + message.getFrom().getFirstName() + " " + message.getFrom().getLastName() + "]" + " " + "id" + " " + message.getFrom().getId() + " ";
+                if (message.getText().equals("/start")) {
+                    sendMsg(message, "Здравствуйте, " + message.getFrom().getFirstName() + HELLO_MSG);
+                }
+                if (message.getText().equals("subscribe" + "\uD83D\uDCF0")) {
+                    if (NewsSubscribe.subscribeIDUser.contains(message.getChatId())) {
+                        NewsSubscribe.subscribeIDUser.remove(message.getChatId());
+                        StringBuilder set = new StringBuilder();
+                        for (Long i : NewsSubscribe.subscribeIDUser) {
+                            set.append(i).append("\n");
+                        }
+                        FileWork.writeFile(set.toString());
+                        sendMsg(message, message.getFrom().getFirstName() + UNSUBSCRIBE);
+                        System.out.println(msgInfo + "Unsubscribed");
+                    } else {
+                        NewsSubscribe.subscribeIDUser.add(message.getChatId());
+                        sendMsg(message, message.getFrom().getFirstName() + SUBSCRIBE);
+                        System.out.println(msgInfo + "Subscribe");
+                        FileWork.update(message.getChatId().toString() + "\r\n");
+                    }
+                }
+                if (message.getText().equals("events" + "\u2B50")) {
+                    sendChatAction(ACTION_TYPING);
+                    ParseEvent thread = new ParseEvent();
+                    thread.start();
+                    if (!thread.isInterrupted()) {
+                        thread.interrupt();
+                    }
+                    System.out.println(msgInfo + "Events");
+
+                }
+                if (message.getText().contains("jobs")) {
+                    sendMsg(message, ParseJobs.parseJobs(message.getText().replaceAll("/jobs ", "")).toString());
+                    System.out.println(msgInfo + "Jobs" + " " + message.getText().replaceAll("/jobs ", ""));
+                }
+
+                if (message.getText().equals("salaries" + "\uD83D\uDCB8")) {
+                    sendChatAction(ACTION_PHOTO);
+                    ParseSalaries thread = new ParseSalaries();
+                    thread.start();
+                    if (!thread.isInterrupted()) {
+                        thread.interrupt();
+                    }
+                    sendImageUploadingAFile(message.getChatId().toString());
+                    System.out.println(msgInfo + "Salaries");
+                }
+                if (message.getText().contains("feedback" + "\u2764")) {
+                    sendChatAction(ACTION_TYPING);
+                    sendMsg(message, FEEDBACK_MSG);
+                    sendMsgCustomUser(203110206, message.getText().replaceAll("feedback", ""));
+                    System.out.println(msgInfo + "Feedback");
+                }
+                if (message.getText().equals("community" + "\uD83D\uDCF1")) {
+                    sendChatAction(ACTION_TYPING);
+                    sendMsg(message, CONTACTS);
+                    System.out.println(msgInfo + "Comunity");
+                }
+                if (message.getText().contains("more" + "\u2753")) {
+                    sendChatAction(ACTION_TYPING);
+                    System.out.println(msgInfo + "More");
+                    sendMsg(message, "jobs <Название вакансии или язык программирования>");
+                }
+                if (message.getText().contains("alertUsers")) {
+                    AdminFunction.alertUsers(message.getText().replaceAll("alertUsers ", ""));
+                    System.out.println(msgInfo + "Alert");
+                }
+                if (message.getText().equals("getIdUsers")) {
+                    AdminFunction.getIdUsers();
+                    System.out.println(msgInfo + "GetIdUsers");
+                }
+            } catch (NullPointerException ignored) {
             }
         }
     }
@@ -207,11 +229,6 @@ class TgBot extends TelegramLongPollingBot {
         try {
             sendChatAction(sendChatActionRequest);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
