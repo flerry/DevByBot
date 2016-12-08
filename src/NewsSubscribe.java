@@ -9,7 +9,8 @@ import java.util.Set;
 
 class NewsSubscribe extends Thread {
     public static final Set<Long> subscribeIDUser = new LinkedHashSet<>();
-    private String checkUpdate = "any_link";
+    private String checkUpdateLink = "any_link";
+    private String checkUpdateTitle = "any_title";
     private final TgBot sendNews = new TgBot();
 
     @Override
@@ -33,21 +34,22 @@ class NewsSubscribe extends Thread {
             String articleLink = itemRateLinks.attr("abs:href");
             String title = itemTitleLinear.text();
 
-            if (!checkUpdate.contains(articleLink)) {
+            if (!checkUpdateLink.contains(articleLink) && !checkUpdateTitle.contains(title) ) {
                 for (Long i : subscribeIDUser)
                     if (i != 0) {
                         sendNews.sendMsgCustomUser(i, title + "\n" + articleLink);
-                        checkUpdate = articleLink;
+                        checkUpdateLink = articleLink;
+                        checkUpdateTitle = title;
                     } else {
                         try {
-                            Thread.sleep(125000);
+                            Thread.sleep(60000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
             } else {
                 try {
-                    Thread.sleep(125000);
+                    Thread.sleep(60000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -17,8 +17,8 @@ import java.util.List;
 
 class TgBot extends TelegramLongPollingBot {
     static long chatId;
-    private static final String NAME = "byDevBot";
-    private static final String TOKEN = "286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U";
+    private static final String NAME = "testDevByBot";
+    private static final String TOKEN = "306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o"; //byDevBot 286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U
     private static final String TXT_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
     private static final String IMG_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/2016-12-05_18-38-22.png";
     private static final String HELLO_MSG = "! Я - бот ресурса Dev.by и я всегда помогаю получить актуальную информацию с нашего сайта! Воспользуйтесь кнопками...";
@@ -28,15 +28,15 @@ class TgBot extends TelegramLongPollingBot {
     private static final String ACTION_PHOTO = "upload_photo";
     private static final String CONTACTS = "[VK] - https://vk.com/devby\n[FACEBOOK] - https://www.facebook.com/devbyby\n[TWITTER] - https://twitter.com/devby\n[\uD83D\uDCE7] - dev@dev.by";
     private static final String FEEDBACK_MSG = "Если Вам понравился наш бот, поставьте ему" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "здесь, пожалуйста:\n" + "https://storebot.me/bot/bydevbot";
-    private static final HashMap <Long, Integer> checkSpam = new HashMap();
+    private static final HashMap <Long, Integer> checkSpam = new HashMap <Long, Integer> ();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {  //main method
         System.out.println("***Start service***");
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(TXT_PATH));
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {  //add subscribe chatID in List
                 NewsSubscribe.subscribeIDUser.add(Long.valueOf(line));
             }
         } catch (IOException e) {
@@ -46,7 +46,7 @@ class TgBot extends TelegramLongPollingBot {
 
 
         NewsSubscribe newsObject = new NewsSubscribe();
-        newsObject.start();
+        newsObject.start();  //service subscribe start
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
             telegramBotsApi.registerBot(new TgBot());
@@ -161,7 +161,6 @@ class TgBot extends TelegramLongPollingBot {
     private void sendMsg(Message message, String text) {  //a method for sending messages in response to the command
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
-
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(); //make a custom keyboard
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
 
