@@ -40,14 +40,14 @@ class NewsSubscribe extends Thread {
                         checkUpdate = articleLink;
                     } else {
                         try {
-                            Thread.sleep(300000);
+                            Thread.sleep(125000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
             } else {
                 try {
-                    Thread.sleep(300000);
+                    Thread.sleep(125000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
