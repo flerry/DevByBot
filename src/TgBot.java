@@ -89,7 +89,7 @@ class TgBot extends TelegramLongPollingBot {
                 String msgInfo = "[" + message.getDate() + "]" + " " + "[" + message.getFrom().getFirstName() + " " + message.getFrom().getLastName() + "]" + " " + "id" + " " + message.getFrom().getId() + " ";
                 if (message.getText().equals("text")) {
                     String url = "https://dev.by/lenta";
-                    Document mainPage = null;
+                    Document mainPage;
                     try {
                         mainPage = Jsoup.connect(url).timeout(30000).get();
 

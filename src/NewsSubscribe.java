@@ -16,7 +16,7 @@ class NewsSubscribe extends Thread {
     public void run() {
         String url = "https://dev.by/lenta";
         while (true) {
-            Document mainPage = null;
+            Document mainPage;
             try {
                 mainPage = Jsoup.connect(url).timeout(30000).get();
 
