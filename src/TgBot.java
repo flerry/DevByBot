@@ -1,3 +1,7 @@
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendChatAction;
@@ -28,7 +32,7 @@ class TgBot extends TelegramLongPollingBot {
     private static final String ACTION_PHOTO = "upload_photo";
     private static final String CONTACTS = "[VK] - https://vk.com/devby\n[FACEBOOK] - https://www.facebook.com/devbyby\n[TWITTER] - https://twitter.com/devby\n[\uD83D\uDCE7] - dev@dev.by";
     private static final String FEEDBACK_MSG = "Если Вам понравился наш бот, поставьте ему" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "здесь, пожалуйста:\n" + "https://storebot.me/bot/bydevbot";
-    private static final HashMap <Long, Integer> checkSpam = new HashMap <Long, Integer> ();
+    private static final HashMap<Long, Integer> checkSpam = new HashMap<Long, Integer>();
 
     public static void main(String[] args) {  //main method
         System.out.println("***Start service***");
@@ -83,6 +87,30 @@ class TgBot extends TelegramLongPollingBot {
             }
             try {
                 String msgInfo = "[" + message.getDate() + "]" + " " + "[" + message.getFrom().getFirstName() + " " + message.getFrom().getLastName() + "]" + " " + "id" + " " + message.getFrom().getId() + " ";
+                if (message.getText().equals("text")) {
+                    String url = "https://dev.by/lenta";
+                    Document mainPage = null;
+                    try {
+                        mainPage = Jsoup.connect(url).timeout(30000).get();
+
+                        Element itemRateLinear = mainPage.select("div[class=item-rate_linear]").first();
+
+                        Elements itemRateLinks = itemRateLinear.select("a[href]");
+
+                        String articleLink = itemRateLinks.attr("abs:href");
+
+                        Document linkToText = Jsoup.connect(articleLink).timeout(30000).get();
+
+                        String text = linkToText.select("div[class=text js-mediator-article]").text();
+
+                        sendMsg(message, text.substring(0, 2000));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
                 if (message.getText().equals("/start")) {
                     sendMsg(message, "Здравствуйте, " + message.getFrom().getFirstName() + HELLO_MSG);
                 }
