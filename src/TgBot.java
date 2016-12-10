@@ -21,10 +21,10 @@ import java.util.List;
 
 class TgBot extends TelegramLongPollingBot {
     static long chatId;
-    private static final String NAME = "testDevByBot";
-    private static final String TOKEN = "306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o"; //byDevBot 286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U
-    private static final String TXT_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
-    private static final String IMG_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/2016-12-05_18-38-22.png";
+    private static final String NAME = "byDevBot";
+    private static final String TOKEN = "286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U"; //byDevBot 286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U    test 306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o
+    private static final String TXT_PATH = "/root/TestDevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
+    private static final String IMG_PATH = "/root/TestDevByBot/2016-12-05_18-38-22.png";
     private static final String HELLO_MSG = "! Я - бот ресурса Dev.by и я всегда помогаю получить актуальную информацию с нашего сайта! Воспользуйтесь кнопками...";
     private static final String UNSUBSCRIBE = ", Ваша подписка успешно удалена!\nЧтобы оформить подписку снова, нажмите на \"subscribe\"";
     private static final String SUBSCRIBE = ", Ваша подписка успешно оформлена!\nЧтобы удалить подписку, нажмите на \"subscribe\"";
