@@ -21,11 +21,13 @@ import java.util.List;
 
 class TgBot extends TelegramLongPollingBot {
     static long chatId;
-    private static final String NAME = "byDevBot";
-    private static final String TOKEN = "286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U"; //byDevBot 286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U    test 306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o
-    private static final String TXT_PATH = "/root/TestDevByBot/TelegramUserID.txt"; //server path  /home/Flerry/TestDevByBot/TelegramUserID.txt    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
-    private static final String IMG_PATH = "/root/TestDevByBot/2016-12-05_18-38-22.png";
+    private static final String NAME = "testDevByBot";
+    private static final String TOKEN = "306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o"; //byDevBot 286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U    test 306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o
+    private static final String TXT_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt"; //server path  /root/TestDevByBot/    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
+    private static final String IMG_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/2016-12-05_18-38-22.png";
     private static final String HELLO_MSG = "! Я - бот ресурса Dev.by и я всегда помогаю получить актуальную информацию с нашего сайта! Воспользуйтесь кнопками...";
+    private static final String HELP_MSG = "subscribe\uD83D\uDCF0:\n-Подписаться/Отписаться на(от) рассылку(и) новостей\n\nnews\uD83C\uDD95\n-Получить последнюю новость\n\nsalaries\uD83D\uDCB8\n-Графики зарплат IT-специалистов\n\n" +
+            "events\u2B50\n-Список ближайших событий\n\ncommunity\uD83D\uDCF1\n-Наши сообщества\n\nfeedback\u2764\n-Оставить отзыв\n\nmore\u00AE\n-Иные команды";
     private static final String UNSUBSCRIBE = ", Ваша подписка успешно удалена!\nЧтобы оформить подписку снова, нажмите на \"subscribe\"";
     private static final String SUBSCRIBE = ", Ваша подписка успешно оформлена!\nЧтобы удалить подписку, нажмите на \"subscribe\"";
     private static final String ACTION_TYPING = "typing";
@@ -131,6 +133,10 @@ class TgBot extends TelegramLongPollingBot {
                         FileWork.update(message.getChatId().toString() + "\r\n");
                     }
                 }
+                if (message.getText().equals("news" + "\uD83C\uDD95")) {
+                    sendChatAction(ACTION_TYPING);
+                    GetLastNews.getLastNews();
+                }
                 if (message.getText().equals("events" + "\u2B50")) {
                     sendChatAction(ACTION_TYPING);
                     ParseEvent thread = new ParseEvent();
@@ -167,7 +173,11 @@ class TgBot extends TelegramLongPollingBot {
                     sendMsg(message, CONTACTS);
                     System.out.println(msgInfo + "Comunity");
                 }
-                if (message.getText().contains("more" + "\u2753")) {
+                if(message.getText().equals("help" + "\u2753")){
+                    sendChatAction(ACTION_TYPING);
+                    sendMsg(message, HELP_MSG);
+                }
+                if (message.getText().contains("more" + "\u00AE")) {
                     sendChatAction(ACTION_TYPING);
                     System.out.println(msgInfo + "More");
                     sendMsg(message, "jobs <Название вакансии или язык программирования>");
@@ -202,17 +212,24 @@ class TgBot extends TelegramLongPollingBot {
         keyboardFirstRow.add("subscribe" + "\uD83D\uDCF0");
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add("news" + "\uD83C\uDD95");
         keyboardSecondRow.add("salaries" + "\uD83D\uDCB8");
         keyboardSecondRow.add("events" + "\u2B50");
-        keyboardSecondRow.add("community" + "\uD83D\uDCF1");
+
 
         KeyboardRow keyboardThreeRow = new KeyboardRow();
         keyboardThreeRow.add("feedback" + "\u2764");
-        keyboardThreeRow.add("more" + "\u2753");
+        keyboardThreeRow.add("community" + "\uD83D\uDCF1");
+        keyboardThreeRow.add("more" + "\u00AE");
+
+        KeyboardRow keyboardFourthRow = new KeyboardRow();
+        keyboardFourthRow.add("help" + "\u2753");
+
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
         keyboard.add(keyboardThreeRow);
+        keyboard.add(keyboardFourthRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
 

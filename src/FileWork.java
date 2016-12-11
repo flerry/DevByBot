@@ -1,7 +1,7 @@
 import java.io.*;
 
 class FileWork {
-    private static final String TXT_PATH = "/root/TestDevByBot/TelegramUserID.txt";
+    private static final String TXT_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt";
 
     //work with files
     public static void writeFile(String text) {

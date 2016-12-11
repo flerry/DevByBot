@@ -29,7 +29,6 @@ class NewsSubscribe extends Thread {
 
                 String articleLink = itemRateLinks.attr("abs:href");
                 String title = itemTitleLinear.text();
-
                 if (!checkUpdateLink.contains(articleLink)) {
                     for (Long i : subscribeIDUser)
                         if (i != 0) {
