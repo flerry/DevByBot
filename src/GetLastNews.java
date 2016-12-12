@@ -5,7 +5,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-public class GetLastNews {
+class GetLastNews {
     public static void getLastNews() {
         TgBot msgBridge = new TgBot();
         String url = "https://dev.by/lenta";
