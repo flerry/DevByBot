@@ -21,10 +21,10 @@ import java.util.List;
 
 class TgBot extends TelegramLongPollingBot {
     static long chatId;
-    private static final String NAME = "testDevByBot";
-    private static final String TOKEN = "306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o"; //byDevBot 286707737:AAFg9W59KppkqWHxdlAGG3PxbNPG9VDv14U    test 306779898:AAEmT5eJnLXCkVnkOF7oz-zafb8EbRn132o
-    private static final String TXT_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt"; //server path  /root/TestDevByBot/    pc path  C:/Users/nurye/IdeaProjects/DevByBot/TelegramUserID.txt
-    private static final String IMG_PATH = "C:/Users/nurye/IdeaProjects/DevByBot/2016-12-05_18-38-22.png";
+    private static final String NAME = "";
+    private static final String TOKEN = ""; 
+    private static final String TXT_PATH = "";
+    private static final String IMG_PATH = "";
     private static final String HELLO_MSG = "! Я - бот ресурса Dev.by и я всегда помогаю получить актуальную информацию с нашего сайта! Воспользуйтесь кнопками...";
     private static final String HELP_MSG = "subscribe\uD83D\uDCF0:\n-Подписаться/Отписаться на(от) рассылку(и) новостей\n\nnews\uD83C\uDD95\n-Получить последнюю новость\n\nsalaries\uD83D\uDCB8\n-Графики зарплат IT-специалистов\n\n" +
             "events\u2B50\n-Список ближайших событий\n\ncommunity\uD83D\uDCF1\n-Наши сообщества\n\nfeedback\u2764\n-Оставить отзыв\n\nmore\u00AE\n-Иные команды";
