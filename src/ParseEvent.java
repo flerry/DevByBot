@@ -28,9 +28,11 @@ class ParseEvent extends Thread {
             events.add(i.attr("title"));
             events.add("\n");
         }
+
         for (String i : events) {
             if (!i.contains("google.com") && !i.contains("calendar.ics")) {
                 returnEvent.append(i);
+
             }
         }
         returnEvent.append("Подробнее: https://events.dev.by");
