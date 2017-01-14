@@ -1,36 +1,31 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
 class GetLastNews {
+    private static final String url = "https://dev.by/?publication=true";
+
     public static void getLastNews() {
         TgBot msgBridge = new TgBot();
-        String urlMainPage = "https://dev.by";
-        String url = "https://dev.by/lenta";
-        Document lentaPage;
-        Document mainPage;
         try {
-            lentaPage = Jsoup.connect(url).timeout(30000).get();
-            mainPage = Jsoup.connect(urlMainPage).timeout(30000).get();
+            Document lentaPage = Jsoup.connect(url).timeout(30000).get();
 
-            Element itemRateLinear = lentaPage.select("div[class=item-rate_linear]").first();
+            Element articleMedium = lentaPage.select("div[class=articles__container]").select("div[class=article article--medium]").first();
 
-            Element itemTitleLinear = lentaPage.select("h3[class=item-title_linear]").first();
+            Element ahref = articleMedium.select("a[href]").first();
 
-
-            Element articlePreviewTitle = mainPage.select("h2[class=article-preview__title]").first();
-
-            Elements elementPublicLink = articlePreviewTitle.select("a[href]");
-
-            String publicLink = elementPublicLink.attr("abs:href");
+            Element articleHeader = articleMedium.select("div[class=article__header]").first();
 
 
-            String title = itemTitleLinear.text();
+            String link = ahref.attr("abs:href");
 
-            msgBridge.sendMsgCustomUser(TgBot.chatId, title + "\n" + publicLink);
+            String title = articleHeader.text();
+
+            String text = articleMedium.select("div[class=article__content]").text();
+
+            msgBridge.sendMsgCustomUser(TgBot.chatId, "*" + title + "*" + "\n" + "_" + text + "_" + "\n" + link);
 
 
         } catch (IOException e) {
