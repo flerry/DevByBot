@@ -1,5 +1,5 @@
 Hello!
-This repository - powerful bot for website Dev.by
+This repository - powerful bot for website Dev.by.
 I used these libraries:
 
 Telegram Bot Library (Java) -
