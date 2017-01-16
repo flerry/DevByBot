@@ -35,8 +35,12 @@ class ParseEvent extends Thread {
 
             }
         }
-        returnEvent.append("Подробнее: https://events.dev.by");
+        returnEvent.append("*Подробнее*: https://events.dev.by");
         msgBridge.sendMsgCustomUser(TgBot.chatId, returnEvent.toString());
+
+        if (!currentThread().isInterrupted()) {
+            currentThread().interrupt();
+        }
 
     }
 

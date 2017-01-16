@@ -25,7 +25,7 @@ class GetLastNews {
 
             String text = articleMedium.select("div[class=article__content]").text();
 
-            msgBridge.sendMsgCustomUser(TgBot.chatId, "*" + title + "*" + "\n" + "_" + text + "_" + "\n" + link);
+            msgBridge.sendMsgCustomUser(TgBot.chatId, "*" + title + "*" + "\n\n" + text + "\n\n" + link);
 
 
         } catch (IOException e) {

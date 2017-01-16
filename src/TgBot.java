@@ -6,14 +6,15 @@ import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,17 +25,15 @@ class TgBot extends TelegramLongPollingBot {
 
     private static final String NAME = "";
     private static final String TOKEN = "";
-    private static final String TXT_PATH = ""; 
-    private static final String IMG_PATH = "";
-    private static final String HELLO_MSG = "! Я - бот ресурса Dev.by и я всегда помогаю получить актуальную информацию с нашего сайта! Воспользуйтесь кнопками...";
-    private static final String HELP_MSG = "subscribe\uD83D\uDCF0:\n-Подписаться/Отписаться на(от) рассылку(и) новостей\n\nnews\uD83C\uDD95\n-Получить последнюю новость\n\nsalaries\uD83D\uDCB8\n-Графики зарплат IT-специалистов\n\n" +
-            "events\u2B50\n-Список ближайших событий\n\ncommunity\uD83D\uDCF1\n-Наши сообщества\n\nfeedback\u2764\n-Оставить отзыв\n\nmore\u00AE\n-Иные команды";
-    private static final String UNSUBSCRIBE = ", Ваша подписка успешно удалена!\nЧтобы оформить подписку снова, нажмите на \"subscribe\"";
-    private static final String SUBSCRIBE = ", Ваша подписка успешно оформлена!\nЧтобы удалить подписку, нажмите на \"subscribe\"";
+    private static final String TXT_PATH = "";
+    private static final String HELLO_MSG = "! Я - бот ресурса Dev.by. Получайте ИТ-новости одновременно с их выходом на сайте и пользуйтесь дополнительными возможностями с помощью кнопок.";
+    private static final String HELP_MSG = "Subscribe\uD83D\uDCF0:\n- Подписаться на новости dev.by (или отписаться от них)\n\nLast news\uD83C\uDD95\n- Получить последнюю новость\n\nJobs\uD83D\uDCE3\n- Актуальные ИТ-вакансии\n\n" +
+            "Events\u2B50\n- Список ИТ-событий ближайшей недели\n\nCommunity\uD83D\uDCF1\n- Сообщества dev.by\n\nFeedback\u2764\n- Оставить отзыв\n\nMore\u00AE\n- Иные команды";
+    private static final String UNSUBSCRIBE = ", *Ваша подписка успешно удалена*!\nЧтобы оформить подписку снова, нажмите на \"subscribe\"";
+    private static final String SUBSCRIBE = ", *Ваша подписка успешно оформлена*!\nЧтобы удалить подписку, нажмите на \"subscribe\"";
     private static final String ACTION_TYPING = "typing";
-    private static final String ACTION_PHOTO = "upload_photo";
-    private static final String CONTACTS = "[VK] - https://vk.com/devby\n[FACEBOOK] - https://www.facebook.com/devbyby\n[TWITTER] - https://twitter.com/devby\n[\uD83D\uDCE7] - dev@dev.by";
-    private static final String FEEDBACK_MSG = "Если Вам понравился наш бот, поставьте ему" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "\uD83C\uDF1F" + "здесь, пожалуйста:\n" + "https://storebot.me/bot/bydevbot";
+    private static final String CONTACTS = "*SLACK* - https://devby.slack.com\n*VK* - https://vk.com/devby\n*FACEBOOK* - https://www.facebook.com/devbyby\n*TWITTER* - https://twitter.com/devby\n[\uD83D\uDCE7] - dev@dev.by";
+    private static final String FEEDBACK_MSG = "Если вам всё нравится, оставьте отзыв здесь:\n" + "https://storebot.me/bot/bydevbot\n" + "Если не нравится, напишите, в чём именно проблема – мы подумаем ;)";
     private static final HashMap<Long, Integer> checkSpam = new HashMap<Long, Integer>();
 
     public static void main(String[] args) {  //main method
@@ -78,11 +77,11 @@ class TgBot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             chatId = message.getChatId();
             if (checkSpam.containsKey(message.getChatId())) {
-                if (message.getDate() - checkSpam.get(message.getChatId()) < 5) {
+                if (message.getDate() - checkSpam.get(message.getChatId()) < 3) {
                     sendMsg(message, "Пожалуйста, не посылайте сообщения так часто!");
                     message = null;
 
-                } else if (message.getDate() - checkSpam.get(message.getChatId()) > 5) {
+                } else if (message.getDate() - checkSpam.get(message.getChatId()) > 3) {
                     checkSpam.put(message.getChatId(), message.getDate());
                 }
             } else {
@@ -115,7 +114,7 @@ class TgBot extends TelegramLongPollingBot {
 
 
                 if (message.getText().equals("/start")) {
-                    sendMsg(message, "Здравствуйте, " + message.getFrom().getFirstName() + HELLO_MSG);
+                    sendMsg(message, "Привет, " + message.getFrom().getFirstName() + HELLO_MSG);
                 }
                 if (message.getText().equals("subscribe" + "\uD83D\uDCF0")) {
                     if (NewsSubscribe.subscribeIDUser.contains(message.getChatId())) {
@@ -134,7 +133,7 @@ class TgBot extends TelegramLongPollingBot {
                         FileWork.update(message.getChatId().toString() + "\r\n");
                     }
                 }
-                if (message.getText().equals("news" + "\uD83C\uDD95")) {
+                if (message.getText().equals("last news" + "\uD83C\uDD95")) {
                     sendChatAction(ACTION_TYPING);
                     GetLastNews.getLastNews();
                 }
@@ -142,25 +141,22 @@ class TgBot extends TelegramLongPollingBot {
                     sendChatAction(ACTION_TYPING);
                     ParseEvent thread = new ParseEvent();
                     thread.start();
-                    if (!thread.isInterrupted()) {
-                        thread.interrupt();
-                    }
                     System.out.println(msgInfo + "Events");
 
                 }
-                if (message.getText().contains("jobs")) {
-                    sendMsg(message, ParseJobs.parseJobs(message.getText().replaceAll("/jobs ", "")).toString());
+                if (message.getText().equals("jobs" + "\uD83D\uDCE3")) {
+                    sendMsg(message, "Введите:\n*jobs* _название вакансии или язык программирования_\n\nПример:\n*jobs java*");
+                }
+
+                if (message.getText().contains("jobs") && !message.getText().contains("\uD83D\uDCE3")) {
+                    sendMsg(message, ParseJobs.parseJobs(message.getText().replaceAll("jobs ", "")).toString());
                     System.out.println(msgInfo + "Jobs" + " " + message.getText().replaceAll("/jobs ", ""));
                 }
 
-                if (message.getText().equals("salaries" + "\uD83D\uDCB8")) {
-                    sendChatAction(ACTION_PHOTO);
+                if (message.getText().equals("salaries")) {
+                    sendChatAction(ACTION_TYPING);
                     ParseSalaries thread = new ParseSalaries();
                     thread.start();
-                    if (!thread.isInterrupted()) {
-                        thread.interrupt();
-                    }
-                    sendImageUploadingAFile(message.getChatId().toString());
                     System.out.println(msgInfo + "Salaries");
                 }
                 if (message.getText().contains("feedback" + "\u2764")) {
@@ -181,7 +177,7 @@ class TgBot extends TelegramLongPollingBot {
                 if (message.getText().contains("more" + "\u00AE")) {
                     sendChatAction(ACTION_TYPING);
                     System.out.println(msgInfo + "More");
-                    sendMsg(message, "jobs <Название вакансии или язык программирования>");
+                    sendMsg(message, "*salaries* - актуальная зарплата");
                 }
                 if (message.getText().contains("alertUsers")) {
                     AdminFunction.alertUsers(message.getText().replaceAll("alertUsers ", ""));
@@ -213,8 +209,8 @@ class TgBot extends TelegramLongPollingBot {
         keyboardFirstRow.add("subscribe" + "\uD83D\uDCF0");
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardSecondRow.add("news" + "\uD83C\uDD95");
-        keyboardSecondRow.add("salaries" + "\uD83D\uDCB8");
+        keyboardSecondRow.add("jobs" + "\uD83D\uDCE3");
+        keyboardSecondRow.add("last news" + "\uD83C\uDD95");
         keyboardSecondRow.add("events" + "\u2B50");
 
 
@@ -251,17 +247,6 @@ class TgBot extends TelegramLongPollingBot {
         sendMessage.setText(text);
         try {
             sendMessage(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendImageUploadingAFile(String chatId) {
-        SendPhoto sendPhotoRequest = new SendPhoto();
-        sendPhotoRequest.setChatId(chatId);
-        sendPhotoRequest.setNewPhoto(new File(IMG_PATH));
-        try {
-            sendPhoto(sendPhotoRequest);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

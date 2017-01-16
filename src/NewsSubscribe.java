@@ -34,7 +34,7 @@ class NewsSubscribe extends Thread {
                 if (!checkUpdateLink.contains(link)) {
                     for (Long i : subscribeIDUser)
                         if (i != 0) {
-                            sendNews.sendMsgCustomUser(i, "*" + title + "*" + "\n" + "_" + text + "_" + "\n" + link);
+                            sendNews.sendMsgCustomUser(i, "*" + title + "*" + "\n\n"  + text + "\n\n" + link);
                             checkUpdateLink = link;
                         } else {
                             try {

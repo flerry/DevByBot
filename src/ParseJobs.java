@@ -21,7 +21,7 @@ class ParseJobs {
             returnJobs.append(i.select("a[href]").attr("title")).append("\n");
             returnJobs.append(i.select("a[href]").attr("abs:href")).append("\n");
         }
-        returnJobs.append("Подробнее: https://jobs.dev.by");
+        returnJobs.append("*Подробнее*: https://jobs.dev.by");
         return returnJobs;
     }
 }

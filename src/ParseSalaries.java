@@ -27,10 +27,14 @@ class ParseSalaries extends Thread {
 
         }
         for (String i : salaries) {
-            returnSalaries.append(i).append("\n");
+            returnSalaries.append(i).append("\n\n");
         }
-        returnSalaries.append("Подробнее: https://salaries.dev.by");
+        returnSalaries.append("*Подробнее*: https://salaries.dev.by");
         msgBridge.sendMsgCustomUser(TgBot.chatId, returnSalaries.toString());
+
+        if (!currentThread().isInterrupted()) {
+            currentThread().interrupt();
+        }
 
     }
 }
